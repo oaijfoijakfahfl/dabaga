@@ -1,0 +1,69 @@
+ menuItem4.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                    	File file = (File) list.getSelectedValue();//获取列表点击文件
+                        if (file != null) {
+                            // 弹出重命名对话框
+                            String name = JOptionPane.showInputDialog("请输入新的文件名：", file.getName());
+                            if (name != null && !name.equals(file.getName())) {
+                                // 修改文件名
+                                String parent = file.getParent();
+                                File newFile = new File(parent, name);
+                                if (file.renameTo(newFile)) {
+                                	 area.setText("文件重命名成功：" + newFile.getPath());
+                                	 //更新文件列表
+                                     File parentDir = file.getParentFile();
+                                     File[] files = parentDir.listFiles();
+                                     list.setListData(files);
+                                   
+                                } else {
+                                	 area.setText("文件名重复重命名失败");
+                                }
+                            }
+                        }
+                    }
+                });
+                // 处理删除点击事件
+                menuItem5.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                    	File file = (File) list.getSelectedValue();//获取列表点击文件
+                        if (file != null) {
+                            // 弹出确认对话框
+                            int option = JOptionPane.showConfirmDialog(null, "确认删除选定的文件或文件夹吗？", "确认删除", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                            if (option == JOptionPane.YES_OPTION) {
+                                // 删除文件或文件夹
+                                if (file.isFile()) {
+                                    if (file.delete()) {
+                                
+                                    	area.setText("文件删除成功：" + file.getPath());
+                                    } else {
+                                    	area.setText("文件删除失败");
+                                    }
+                                } else {
+                                    if (deleteDirectory(file)) {
+                                    	area.setText("文件夹删除成功：" + file.getPath());
+                                    } else {
+                                    	area.setText("文件夹删除失败");
+                                    }
+                                }
+                            }
+                        }
+                        //更新文件列表
+                        File parentDir = file.getParentFile();
+                        File[] files = parentDir.listFiles();
+                        list.setListData(files);
+                      
+                    }
+                });
+             // 处理统计点击事件
+                menuItem6.addActionListener(new ActionListener() {
+                	public void actionPerformed(ActionEvent e) {
+                        File directory = (File) list.getSelectedValue();//获取列表点击文件
+                        if (directory != null && directory.isDirectory()) {
+                            // 统计选定文件夹中的文件数目
+                            int count = directory.listFiles().length;
+                            area.setText("选定文件夹中的文件数目为：" + count);
+                        }
+                    }
+                	 });
